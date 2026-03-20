@@ -1,0 +1,548 @@
+{
+    "ministry": "Ministry of Agriculture & Farmers Welfare",
+    "source": "PIB Delhi & Official Portals (Updated 2026)",
+    "schemes": [
+        {
+            "id": 1,
+            "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+            "category": "Central Sector Schemes",
+            "launch_year": 2019,
+            "purpose": "Supplement financial needs of land holding farmers via DBT of Rs. 6000 per year.",
+            "eligibility": "Indian citizens who are landholding farmer families owning cultivable agricultural land. Excludes institutional landholders, high-income earners, and taxpayers.",
+            "application_process": "Apply online via pmkisan.gov.in under 'Farmers Corner -> New Farmer Registration' or offline through Common Service Centres (CSCs).",
+            "documents_required": [
+                "Aadhaar Card",
+                "Bank Account Details (Aadhaar seeded with IFSC)",
+                "Land Ownership Records (Khatauni/Khasra/Patta)",
+                "Active Mobile Number"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Aadhaar authentication (eKYC) is mandatory. Land must be recorded in the applicant's name in state records, and the bank account must be seeded with Aadhaar for Direct Benefit Transfer (DBT).",
+            "where_to_apply_links": [
+                "https://pmkisan.gov.in/",
+                "https://pmkisan.gov.in/RegistrationFormNew.aspx"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Pradhan Mantri Kisan MaanDhan Yojana (PM-KMY)",
+            "category": "Central Sector Schemes",
+            "launch_year": 2019,
+            "purpose": "Provide Rs. 3,000 monthly pension to enrolled small and marginal farmers (SMFs) post 60 years of age.",
+            "eligibility": "Small and Marginal Farmers (SMFs) owning cultivable land up to 2 hectares. Must be between 18 to 40 years of age.",
+            "application_process": "Online self-registration via the Maandhan portal or offline assisted registration via Common Service Centres (CSCs).",
+            "documents_required": [
+                "Aadhaar Card",
+                "Savings Bank Account / PM-KISAN Account details",
+                "Active Mobile Number"
+            ],
+            "coverage_risks": "Old age financial insecurity and loss of livelihood.",
+            "mandatory_requirements": "Age strictly between 18 to 40 years at the time of entry, and regular monthly contributions to the pension fund.",
+            "where_to_apply_links": [
+                "https://maandhan.in/"
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+            "category": "Central Sector Schemes",
+            "launch_year": 2016,
+            "purpose": "Provide simple, affordable, and comprehensive crop insurance against non-preventable natural risks.",
+            "eligibility": "All farmers growing notified crops in notified areas, including sharecroppers and tenant farmers.",
+            "application_process": "Apply online via the National Crop Insurance Portal (NCIP), PMFBY mobile app, or offline through bank branches, CSCs, or authorized insurance agents during the sowing season.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Bank Passbook",
+                "Land Possession Certificate (LPC) / Records of Right (RoR)",
+                "Sowing Declaration",
+                "Tenant/Sharecropper agreement (if applicable)"
+            ],
+            "coverage_risks": "Yield losses due to natural fire, lightning, storms, hail, cyclone, drought, flood, pests, and diseases. Also covers prevented sowing, post-harvest losses (up to 14 days), and localized calamities.",
+            "mandatory_requirements": "Must have an insurable interest in the crop, timely premium payment (1.5% for Rabi, 2% for Kharif, 5% for commercial), and application within designated crop cycle windows.",
+            "where_to_apply_links": [
+                "https://pmfby.gov.in/"
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Modified Interest Subvention Scheme (MISS)",
+            "category": "Central Sector Schemes",
+            "launch_year": null,
+            "purpose": "Provide concessional short-term agri-loans up to Rs. 3.00 lakh at 7% (effectively 4% with prompt repayment).",
+            "eligibility": "Farmers availing short-term crop loans through Kisan Credit Card (KCC) for crop husbandry and allied activities.",
+            "application_process": "Apply for or renew a Kisan Credit Card (KCC) at any participating commercial bank, cooperative bank, or Regional Rural Bank (RRB).",
+            "documents_required": [
+                "Aadhaar Card",
+                "PAN Card",
+                "Land holding documents",
+                "Passport size photographs"
+            ],
+            "coverage_risks": "Not Applicable (Provides relief from high-interest debt and financial distress).",
+            "mandatory_requirements": "Must possess a Kisan Credit Card (KCC) and ensure prompt repayment of the loan within one year to receive the additional 3% subvention.",
+            "where_to_apply_links": [
+                "Apply offline at local Bank Branches"
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Agriculture Infrastructure Fund (AIF)",
+            "category": "Central Sector Schemes",
+            "launch_year": 2020,
+            "purpose": "Medium-long term debt financing (Rs. 1 lakh crore) for post-harvest management infrastructure with 3% interest subvention.",
+            "eligibility": "Farmers, FPOs, PACS, Agri-entrepreneurs, Startups, State Agencies, and Local Body sponsored PPP projects.",
+            "application_process": "Register on the AIF portal, generate credentials via OTP, fill out the application form, and upload a Detailed Project Report (DPR). The application is verified by the Ministry PMU and automatically forwarded to the chosen lending institution.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Detailed Project Report (DPR)",
+                "Bank Account Details",
+                "Land documents for infrastructure setup",
+                "Business/Company Registration (if applicable)"
+            ],
+            "coverage_risks": "Credit guarantee coverage provided under CGTMSE for eligible loans up to Rs. 2 Crore.",
+            "mandatory_requirements": "Project must strictly be for post-harvest management infrastructure or community farming assets.",
+            "where_to_apply_links": [
+                "https://agriinfra.dac.gov.in/"
+            ]
+        },
+        {
+            "id": 6,
+            "name": "Formation & Promotion of new 10,000 FPOs",
+            "category": "Central Sector Schemes",
+            "launch_year": 2020,
+            "purpose": "Form and promote 10,000 FPOs with financial assistance, matching equity grants, and credit guarantees.",
+            "eligibility": "Groups of farmers willing to aggregate and form a Farmer Producer Organization.",
+            "application_process": "Farmers must approach designated Implementing Agencies (IAs like NABARD, SFAC, NCDC) or local Cluster Based Business Organizations (CBBOs) for group registration and handholding.",
+            "documents_required": [
+                "Farmer ID proofs (Aadhaar)",
+                "Land records of members",
+                "FPO Registration documents (under Companies/Cooperative Act)",
+                "Bank Account Details of FPO"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Minimum 300 farmers required to form an FPO in plain areas, or 100 farmers in Hilly/North-Eastern regions.",
+            "where_to_apply_links": [
+                "http://sfacindia.com/",
+                "https://enam.gov.in/web/fpo"
+            ]
+        },
+        {
+            "id": 7,
+            "name": "National Beekeeping and Honey Mission (NBHM)",
+            "category": "Central Sector Schemes",
+            "launch_year": 2020,
+            "purpose": "Promote scientific beekeeping and achieve the 'Sweet Revolution'.",
+            "eligibility": "Individuals, beekeepers, farmers, FPOs, and honey societies engaging in beekeeping and related activities.",
+            "application_process": "Register online via the Madhukranti portal. Project proposals for funding must be routed through State Departments of Agriculture/Horticulture or nodal agencies.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Proof of Beekeeping Activity",
+                "Bank Account Details",
+                "FPO/Society Registration (if applying as group)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Must be actively engaged in scientific beekeeping, honey production, or honey processing.",
+            "where_to_apply_links": [
+                "https://madhukranti.in/"
+            ]
+        },
+        {
+            "id": 8,
+            "name": "Market Intervention Scheme and Price support Scheme (MIS-PSS)",
+            "category": "Central Sector Schemes",
+            "launch_year": null,
+            "purpose": "Procure pulses, oilseeds, copra, and perishables to protect growers from distress sales during bumper crops.",
+            "eligibility": "Growers of specific agricultural and horticultural commodities when market prices fall below economic levels.",
+            "application_process": "Farmers register at designated state procurement centers (like NAFED, FCI, or state agencies) during the officially announced procurement window.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records / Sowing certificate",
+                "Bank Passbook for DBT",
+                "Crop registration slip from state portal"
+            ],
+            "coverage_risks": "Protects farmers from market price crashes, distress sales, and unremunerative pricing during peak harvest arrivals.",
+            "mandatory_requirements": "Agricultural produce must meet Fair Average Quality (FAQ) standards set by the government.",
+            "where_to_apply_links": [
+                "State-specific e-Procurement Portals / Local Mandi Boards"
+            ]
+        },
+        {
+            "id": 9,
+            "name": "Namo Drone Didi",
+            "category": "Central Sector Schemes",
+            "launch_year": 2024,
+            "purpose": "Provide drones to 15,000 Women SHGs for rental agricultural services (80% subsidy).",
+            "eligibility": "Women-led Self-Help Groups (SHGs) registered under DAY-NRLM. Members must be between 18-40 years old (varies slightly by state) with basic educational qualifications.",
+            "application_process": "Selection is cluster-based. SHGs apply via the Central Agri Mechanization DBT Portal (agrimachinery.nic.in) or through the State Rural Livelihood Mission (SRLM) offices.",
+            "documents_required": [
+                "SHG Registration Certificate",
+                "Aadhaar of members",
+                "SHG Bank Passbook",
+                "DGCA-approved Drone Vendor Quotation",
+                "Proof of DAY-NRLM registration"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "At least one SHG member must successfully complete a mandatory 15-day training (5 days DGCA drone pilot training + 10 days agricultural application training).",
+            "where_to_apply_links": [
+                "https://agrimachinery.nic.in/",
+                "Local Gram Panchayat / DAY-NRLM office"
+            ]
+        },
+        {
+            "id": 10,
+            "name": "Rastriya Krishi Vikas Yojana - DPR",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Create pre & post-harvest infrastructure with state autonomy.",
+            "eligibility": "State Governments, State agencies, and Agri-startups seeking funding for agriculture and allied sector projects.",
+            "application_process": "Startups apply through designated RKVY-RAFTAAR incubators. State departments submit Detailed Project Reports (DPRs) to the State Level Sanctioning Committee (SLSC).",
+            "documents_required": [
+                "Detailed Project Report (DPR)",
+                "Business/Startup Registration (for startups)",
+                "Financial projections",
+                "Land documents (if applicable)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Project must align with state agricultural priorities and receive official SLSC approval.",
+            "where_to_apply_links": [
+                "https://rkvy.nic.in/",
+                "State Agriculture Department Portals"
+            ]
+        },
+        {
+            "id": 11,
+            "name": "Soil Health Card (SHC)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Provide information to farmers on soil nutrient status and fertilizer recommendations.",
+            "eligibility": "All farmers across India possessing cultivable land.",
+            "application_process": "Submit soil samples to local agriculture department officials, Krishi Vigyan Kendras (KVKs), or approved soil testing labs.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land details (Khata/Khasra number)",
+                "Mobile Number"
+            ],
+            "coverage_risks": "Not Applicable (Mitigates soil degradation and excessive chemical fertilizer use).",
+            "mandatory_requirements": "Must own or cultivate the land from which the soil sample is taken.",
+            "where_to_apply_links": [
+                "https://soilhealth.dac.gov.in/"
+            ]
+        },
+        {
+            "id": 12,
+            "name": "Rainfed Area Development (RAD)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2014,
+            "purpose": "Promote Integrated Farming System (IFS) in cluster mode to mitigate extreme weather impacts.",
+            "eligibility": "Farmers located in rainfed areas adopting integrated farming systems.",
+            "application_process": "Apply through the local District Agriculture Office or State Agriculture Department based on local cluster planning.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land ownership proof",
+                "Bank account details",
+                "Passport size photograph"
+            ],
+            "coverage_risks": "Mitigates the impacts of extreme weather events like droughts and floods by diversifying agricultural income.",
+            "mandatory_requirements": "Must adopt an Integrated Farming System (combining multi-cropping with livestock, fishery, apiculture, etc.).",
+            "where_to_apply_links": [
+                "State Agriculture Department Portals / Local District Agriculture Office"
+            ]
+        },
+        {
+            "id": 13,
+            "name": "Per Drop More Crop (PDMC)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2015,
+            "purpose": "Increase farm-level water use efficiency via micro-irrigation technologies.",
+            "eligibility": "All farmers, with special provisions and higher subsidies for Small/Marginal farmers, SC/ST, and women.",
+            "application_process": "Apply through the State's horticulture/agriculture department portal or physically at the District Agriculture Office by submitting land details and vendor quotations.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records",
+                "Bank Passbook",
+                "Quotation from approved micro-irrigation system vendor"
+            ],
+            "coverage_risks": "Mitigates water scarcity, drought impacts, and inefficient nutrient usage.",
+            "mandatory_requirements": "The micro-irrigation system (drip/sprinkler) must be purchased from and installed by a government-registered/approved vendor.",
+            "where_to_apply_links": [
+                "State Horticulture/Agriculture Portals"
+            ]
+        },
+        {
+            "id": 14,
+            "name": "Micro Irrigation Fund (MIF)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Facilitate states in mobilizing resources for micro-irrigation via NABARD. (Merged with PDMC).",
+            "eligibility": "State Governments (beneficiaries are ultimately farmers receiving state subsidies).",
+            "application_process": "States apply to NABARD for funds. Farmers apply for the resulting subsidies via their state-specific agriculture departments.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records",
+                "Vendor quotations (For farmers)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "State governments must commit to mobilizing the resources to expand micro-irrigation coverage.",
+            "where_to_apply_links": [
+                "NABARD / State Agriculture Portals"
+            ]
+        },
+        {
+            "id": 15,
+            "name": "Paramparagat Krishi Vikas Yojana (PKVY)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Increase soil fertility and healthy food production via organic practices in cluster mode.",
+            "eligibility": "Groups of at least 20 farmers forming a cluster of 20 hectares to transition to organic farming.",
+            "application_process": "Farmers must form a cluster and apply through the local Gram Panchayat or District Agriculture Office for registration under the Participatory Guarantee System (PGS).",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land holding documents",
+                "Bank account details",
+                "Cluster formation resolution"
+            ],
+            "coverage_risks": "Not Applicable (Mitigates chemical soil toxicity).",
+            "mandatory_requirements": "Farmers must strictly avoid agro-chemicals and follow approved organic practices to achieve certification.",
+            "where_to_apply_links": [
+                "https://pgsindia-ncof.gov.in/",
+                "Local Gram Panchayat / District Agriculture Office"
+            ]
+        },
+        {
+            "id": 16,
+            "name": "Sub-Mission on Agriculture Mechanization (SMAM)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2014,
+            "purpose": "Accelerate agricultural mechanization, especially for small/marginal farmers.",
+            "eligibility": "Individual farmers, SHGs, FPOs, and cooperatives looking to purchase agricultural machinery or establish Custom Hiring Centres (CHCs).",
+            "application_process": "Apply online via the Direct Benefit Transfer (DBT) portal for Agricultural Mechanization (agrimachinery.nic.in) by uploading required documents and vendor quotes.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land ownership proof",
+                "Bank Passbook",
+                "Quotation from approved machinery dealer",
+                "Caste Certificate (if applicable)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Purchase must strictly be from approved manufacturers/dealers listed on the central portal.",
+            "where_to_apply_links": [
+                "https://agrimachinery.nic.in/"
+            ]
+        },
+        {
+            "id": 17,
+            "name": "Crop Residue Management",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2018,
+            "purpose": "Prevent crop residue burning by promoting in-situ management machinery. (Merged with SMAM).",
+            "eligibility": "Farmers, cooperative societies, FPOs, and panchayats, primarily in Punjab, Haryana, UP, and Delhi.",
+            "application_process": "Apply via state-specific agricultural mechanization portals or the central agrimachinery.nic.in portal to get subsidies on specific CRM equipment.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records",
+                "Bank Passbook",
+                "Quotation from approved dealer"
+            ],
+            "coverage_risks": "Mitigates severe air pollution and prevents the loss of soil micro-organisms caused by crop burning.",
+            "mandatory_requirements": "Machinery must be used strictly for in-situ management of crop residue.",
+            "where_to_apply_links": [
+                "https://agrimachinery.nic.in/",
+                "State Agriculture Mechanization Portals"
+            ]
+        },
+        {
+            "id": 18,
+            "name": "Agro-forestry",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2014,
+            "purpose": "Promote plantation on farmlands by providing Quality Planting Materials (QPM).",
+            "eligibility": "Farmers willing to plant trees on their farmland alongside crops.",
+            "application_process": "Farmers can apply through the State Forest Department or District Agriculture Office to receive subsidized saplings.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land possession certificate",
+                "Bank details"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Willingness to integrate tree plantation with existing crop farming operations.",
+            "where_to_apply_links": [
+                "State Forest Department / District Agriculture Offices"
+            ]
+        },
+        {
+            "id": 19,
+            "name": "National Food Security Mission (NFSM)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Increase production of cereals and pulses through area expansion and productivity enhancement.",
+            "eligibility": "Farmers in identified districts growing rice, wheat, pulses, coarse cereals, and nutri-cereals (millets).",
+            "application_process": "Benefits (like subsidized seeds and inputs) are routed through the State Agriculture Department. Farmers apply at the Block/District Agriculture Office.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land holding proof",
+                "Bank account details"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Must be cultivating the specific notified crops in the targeted districts.",
+            "where_to_apply_links": [
+                "State Agriculture Department Portals / Local Block Agriculture Office"
+            ]
+        },
+        {
+            "id": 20,
+            "name": "Sub-Mission on Seed and Planting Material (SMSP)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Support seed production chain and infrastructure. (Merged with NFSM).",
+            "eligibility": "Seed producing organizations, state farms, and farmers involved in certified seed production.",
+            "application_process": "Participation is coordinated by State Seed Corporations and the State Agriculture Department. Monitored via the SATHI portal.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records",
+                "Registration with State Seed Certification Agency"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Strict adherence to scientific seed production quality, testing, and isolation guidelines.",
+            "where_to_apply_links": [
+                "https://seedtrace.gov.in/",
+                "State Seed Corporations"
+            ]
+        },
+        {
+            "id": 21,
+            "name": "National Mission on Edible Oils (NMEO)-Oil Palm",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2021,
+            "purpose": "Promote oil palm cultivation for edible oil self-reliance.",
+            "eligibility": "Farmers in designated target states (especially North-East and A&N Islands) willing to cultivate oil palm.",
+            "application_process": "Apply through the District Horticulture/Agriculture Officer or state-designated agencies handling the Oil Palm mission.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records",
+                "Bank Passbook"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Land must be geographically and climatically suitable for oil palm cultivation.",
+            "where_to_apply_links": [
+                "State Horticulture/Agriculture Portals"
+            ]
+        },
+        {
+            "id": 22,
+            "name": "Mission for Integrated Development of Horticulture (MIDH)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2014,
+            "purpose": "Holistic growth of the horticulture sector.",
+            "eligibility": "Farmers, FPOs, and entrepreneurs engaged in cultivating fruits, vegetables, spices, flowers, and aromatic plants.",
+            "application_process": "Apply through the State Horticulture Mission (SHM) portal or directly at the District Horticulture Office with a project proposal.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records",
+                "Project Proposal / Business Plan (for infrastructure)",
+                "Bank account details"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Must be actively engaged in cultivating horticultural crops or setting up post-harvest horticulture infrastructure.",
+            "where_to_apply_links": [
+                "https://midh.gov.in/",
+                "State Horticulture Mission Portals"
+            ]
+        },
+        {
+            "id": 23,
+            "name": "National Bamboo Mission (NBM)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Develop complete value chain of the bamboo sector. (Merged with MIDH).",
+            "eligibility": "Farmers, artisans, and entrepreneurs involved in bamboo plantation or bamboo product manufacturing.",
+            "application_process": "Apply through the State Bamboo Mission (SBM) or State Bamboo Development Agency (SBDA) at the district level.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records (for plantation)",
+                "Bank details",
+                "Project report (for processing units)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Activities and projects must fall strictly within the bamboo value chain.",
+            "where_to_apply_links": [
+                "https://nbm.nic.in/",
+                "State Bamboo Development Agency Offices"
+            ]
+        },
+        {
+            "id": 24,
+            "name": "Integrated Scheme for Agriculture Marketing (ISAM)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Govern agricultural produce marketing via infrastructure and e-NAM integration.",
+            "eligibility": "Farmers, traders, FPOs, and state APMCs.",
+            "application_process": "Farmers and traders can register on the e-NAM portal (enam.gov.in) or via the e-NAM mobile app to participate in online trading.",
+            "documents_required": [
+                "Aadhaar Card (for farmers)",
+                "Bank Account Details",
+                "Mandi License/FSSAI (for traders)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Must belong to or trade within an APMC mandi integrated with the e-NAM network.",
+            "where_to_apply_links": [
+                "https://enam.gov.in/"
+            ]
+        },
+        {
+            "id": 25,
+            "name": "Mission Organic Value Chain Development for North Eastern Region (MOVCDNER)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": 2015,
+            "purpose": "Develop certified organic production clusters in the NE region.",
+            "eligibility": "Farmers in the 8 North Eastern states willing to form FPOs/FPCs for organic farming.",
+            "application_process": "Implemented through State Lead Agencies. Farmers apply by joining cluster-level FPOs mobilized by state-appointed agencies.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land holding proof",
+                "Bank details",
+                "FPO membership documents"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Must reside in one of the 8 North Eastern states and commit strictly to certified organic farming practices.",
+            "where_to_apply_links": [
+                "State Lead Agencies / Agriculture Departments in NE Region"
+            ]
+        },
+        {
+            "id": 26,
+            "name": "Sub-Mission on Agriculture Extension (SMAE)",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Disseminate technology to farmers via ATMA and digital initiatives.",
+            "eligibility": "All farmers seeking technical advisory, training, and exposure visits.",
+            "application_process": "Contact the Agricultural Technology Management Agency (ATMA) at the district level or register via digital portals like Kisan Call Centre and VISTAAR.",
+            "documents_required": [
+                "Aadhaar Card",
+                "Basic farmer profile details (to register for SMS advisories)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "None. Open to all farmers for knowledge dissemination.",
+            "where_to_apply_links": [
+                "District ATMA Offices",
+                "https://kcc.dac.gov.in/ (Kisan Call Centre)"
+            ]
+        },
+        {
+            "id": 27,
+            "name": "Digital Agriculture",
+            "category": "Centrally Sponsored Schemes",
+            "launch_year": null,
+            "purpose": "Develop a digital public infrastructure (AgriStack) for inclusive, farmer-centric solutions.",
+            "eligibility": "All farmers with official land records (for inclusion in the unified Farmers Database).",
+            "application_process": "No direct application required. Farmers are onboarded during state-run digital crop surveys and registry processes (eKYC).",
+            "documents_required": [
+                "Aadhaar Card",
+                "Land records (to be linked for generating the unique Farmers ID)"
+            ],
+            "coverage_risks": "Not Applicable",
+            "mandatory_requirements": "Successful eKYC linkage with official state land records.",
+            "where_to_apply_links": [
+                "State Revenue/Agriculture Digital Surveys"
+            ]
+        }
+    ]
+}

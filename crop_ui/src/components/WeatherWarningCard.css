@@ -1,0 +1,116 @@
+.weather-warning-card__wrapper {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  z-index: 10;
+  position: relative;
+}
+
+.ww-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-xl);
+  border-left: 6px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: white;
+}
+
+.ww-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ww-optimal {
+  border-left-color: #22c55e;
+  background: linear-gradient(to right, #f0fdf4, #ffffff);
+}
+
+.ww-warning {
+  border-left-color: #f59e0b;
+  background: linear-gradient(to right, #fffbeb, #ffffff);
+}
+
+.ww-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ww-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+
+.safe-icon {
+  animation: bounceIn 0.8s ease-out forwards;
+}
+
+.alert-icon {
+  animation: pulse-alert 2s infinite ease-in-out;
+}
+
+.ww-text {
+  flex: 1;
+}
+
+.ww-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.4rem;
+  font-family: var(--font-heading);
+}
+
+.ww-optimal .ww-title {
+  color: #166534;
+}
+
+.ww-warning .ww-title {
+  color: #92400e;
+}
+
+.ww-desc {
+  font-size: 0.95rem;
+  color: #15803d;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ww-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style-type: '⚡  '; 
+  color: #b45309;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.ww-list li {
+  margin-bottom: 0.35rem;
+  line-height: 1.5;
+}
+
+.skeleton-loader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  color: var(--gray-500);
+  border-left: 6px solid var(--gray-300);
+  font-weight: 600;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse-alert {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
