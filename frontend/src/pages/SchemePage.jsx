@@ -13,7 +13,7 @@ const SchemePage = () => {
     disease_or_yield_status: '',
     top_k: 5
   })
-  
+
   const [isLoading, setIsLoading] = useState(false)
   const [isSyncing, setIsSyncing] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
@@ -26,7 +26,7 @@ const SchemePage = () => {
     const loadProfile = async () => {
       const email = localStorage.getItem('agrisense_user_email');
       let profile = null;
-      
+
       if (email) {
         try {
           const res = await fetch(`${import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'}/api/v1/profile/${email}`);
@@ -42,7 +42,7 @@ const SchemePage = () => {
         // Fill from profile
         crop_type: profile?.crop_type || prev.crop_type,
         land_size_acres: profile?.land_size_acres || prev.land_size_acres,
-        
+
         // Fill from sync or profile
         location: profile?.location || (savedData ? JSON.parse(savedData).region_info : prev.location)
       }))
@@ -67,7 +67,7 @@ const SchemePage = () => {
   const syncLocation = (silent = false) => {
     // PRIORITY 1: Check farmer's registered profile location
     const profile = JSON.parse(localStorage.getItem('agrisense_user_profile') || 'null')
-    
+
     if (profile && profile.location) {
       setForm(prev => ({ ...prev, location: profile.location }))
       if (!silent) showToast(`📍 Using profile location: ${profile.location}`, 'success')
@@ -79,7 +79,7 @@ const SchemePage = () => {
       if (!silent) showToast("Geolocation is not supported by your browser", "error")
       return
     }
-    
+
     setIsSyncing(true)
     navigator.geolocation.getCurrentPosition(async (position) => {
       try {
@@ -90,7 +90,7 @@ const SchemePage = () => {
           body: JSON.stringify({ lat: latitude, lon: longitude })
         })
         const data = await response.json()
-        
+
         if (data.status === 'success') {
           setForm(prev => ({
             ...prev,
@@ -130,13 +130,13 @@ const SchemePage = () => {
     recognition.onstart = () => setIsRecording(true);
     recognition.onend = () => setIsRecording(false);
     recognition.onerror = () => setIsRecording(false);
-    
+
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setForm(prev => ({
         ...prev,
-        disease_or_yield_status: prev.disease_or_yield_status 
-          ? prev.disease_or_yield_status + " " + transcript 
+        disease_or_yield_status: prev.disease_or_yield_status
+          ? prev.disease_or_yield_status + " " + transcript
           : transcript
       }));
     };
@@ -152,7 +152,7 @@ const SchemePage = () => {
     }
 
     setIsLoading(true)
-    
+
     try {
       // Temporary: Replace with actual fetch to VITE_BACKEND_URI + '/api/v1/match'
       // For now we will mock the AI call with a simulated delay and mock payload if backend is not live
@@ -242,7 +242,7 @@ const SchemePage = () => {
 
       <div className="container scheme-page__body">
         <WeatherWarningCard />
-        
+
         {!result ? (
           <div className="scheme-layout">
             <div className="form-panel">
@@ -262,9 +262,9 @@ const SchemePage = () => {
                   <div className="form-group">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <label className="form-label">Location (State, Region) *</label>
-                      <button 
-                        type="button" 
-                        onClick={syncLocation} 
+                      <button
+                        type="button"
+                        onClick={syncLocation}
                         disabled={isSyncing}
                         style={{ background: 'none', border: 'none', color: 'var(--primary-600)', fontSize: '0.75rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                       >
@@ -289,19 +289,19 @@ const SchemePage = () => {
                 <div className="form-group" style={{ position: 'relative' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <label className="form-label">Disease or Yield Status (Optional)</label>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={toggleSpeech}
                       className={isRecording ? 'voice-btn recording' : 'voice-btn'}
-                      style={{ 
-                        background: isRecording ? '#fee2e2' : 'none', 
-                        border: 'none', 
-                        color: isRecording ? '#ef4444' : 'var(--primary-600)', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '700', 
-                        cursor: 'pointer', 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      style={{
+                        background: isRecording ? '#fee2e2' : 'none',
+                        border: 'none',
+                        color: isRecording ? '#ef4444' : 'var(--primary-600)',
+                        fontSize: '0.75rem',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: '4px',
                         padding: '2px 8px',
                         borderRadius: '12px'
@@ -310,9 +310,9 @@ const SchemePage = () => {
                       {isRecording ? '🛑 Stop Recording...' : '🎙️ Speak instead of typing'}
                     </button>
                   </div>
-                  <textarea 
-                    name="disease_or_yield_status" 
-                    className="form-input form-textarea" 
+                  <textarea
+                    name="disease_or_yield_status"
+                    className="form-input form-textarea"
                     placeholder="e.g. Blast disease detected, 30% yield loss expected. Need subsidy for micro-irrigation."
                     value={form.disease_or_yield_status}
                     onChange={handleChange}
@@ -341,7 +341,7 @@ const SchemePage = () => {
                   <li><strong>Step-by-step guidance:</strong> Learn precisely where to go and what documents to bring.</li>
                 </ul>
               </div>
-              
+
 
             </div>
           </div>
@@ -370,7 +370,7 @@ const SchemePage = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {result.treatment_plan && (
                   <div className="treatment-plan-card">
                     <div className="treatment-card-header">
@@ -394,13 +394,13 @@ const SchemePage = () => {
                           <span className="scheme-category">{scheme.category}</span>
                         </div>
                         <p className="scheme-purpose">{scheme.purpose}</p>
-                        
+
                         <div className="scheme-expandable">
                           <div className="detail-block">
                             <strong>✅ Eligibility:</strong>
                             <p>{scheme.eligibility}</p>
                           </div>
-                          
+
                           <div className="docs-block">
                             <strong>📄 Required Documents:</strong>
                             <div className="doc-tags">
@@ -456,10 +456,10 @@ const SchemePage = () => {
         )}
       </div>
       {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type} 
-          onClose={() => setToast(null)} 
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
         />
       )}
     </div>

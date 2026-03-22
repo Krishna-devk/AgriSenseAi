@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import Toast from '../components/Toast'
 import './TreatmentPage.css'
 import WeatherWarningCard from '../components/WeatherWarningCard'
 
@@ -10,8 +11,48 @@ const TreatmentPage = () => {
   })
   
   const [isLoading, setIsLoading] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [toast, setToast] = useState(null)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
+
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type })
+  }
+
+  const toggleSpeech = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      showToast("Speech recognition is not supported in this browser.", "error")
+      return
+    }
+
+    if (isRecording) {
+      setIsRecording(false)
+      return
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-IN'; 
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onend = () => setIsRecording(false);
+    recognition.onerror = () => setIsRecording(false);
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setForm(prev => ({
+        ...prev,
+        disease_info: prev.disease_info 
+          ? prev.disease_info + " " + transcript 
+          : transcript
+      }));
+    };
+
+    recognition.start();
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -72,6 +113,10 @@ const TreatmentPage = () => {
     <div className="treatment-page">
       {/* Header */}
       <div className="treatment-page__header">
+        <div className="floating-leaf" style={{ top: '10%', left: '10%', animationDelay: '0s' }}>🌿</div>
+        <div className="floating-leaf" style={{ top: '60%', right: '15%', animationDelay: '7s' }}>💊</div>
+        <div className="floating-leaf" style={{ bottom: '15%', left: '20%', animationDelay: '4s' }}>🔬</div>
+        
         <div className="container">
           <div className="section-tag">🩺 AgriSense Rx</div>
           <h1>AI Crop Doctor & Treatment Center</h1>
@@ -106,7 +151,29 @@ const TreatmentPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Disease & Status Information *</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label className="form-label">Disease & Status Information *</label>
+                  <button 
+                    type="button" 
+                    onClick={toggleSpeech}
+                    className={isRecording ? 'voice-btn recording' : 'voice-btn'}
+                    style={{ 
+                      background: isRecording ? '#fee2e2' : 'none', 
+                      border: 'none', 
+                      color: isRecording ? '#ef4444' : 'var(--primary-600)', 
+                      fontSize: '0.75rem', 
+                      fontWeight: '700', 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '4px',
+                      padding: '2px 8px',
+                      borderRadius: '12px'
+                    }}
+                  >
+                    {isRecording ? '🛑 Stop Recording...' : '🎙️ Speak instead of typing'}
+                  </button>
+                </div>
                 <textarea 
                   name="disease_info" 
                   className="form-input form-textarea" 
@@ -174,6 +241,14 @@ const TreatmentPage = () => {
           )}
         </div>
       </div>
+      
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   )
 }

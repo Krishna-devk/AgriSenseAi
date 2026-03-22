@@ -6,26 +6,30 @@
 }
 
 .ww-card {
-  padding: 1.25rem 1.5rem;
+  padding: 1.5rem 2.5rem;
   border-radius: var(--radius-xl);
-  border-left: 6px solid;
-  transition: transform 0.2s, box-shadow 0.2s;
-  background-color: white;
+  border-left: 8px solid;
+  transition: transform 0.25s, box-shadow 0.25s;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ww-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 30px 60px -12px rgba(0,0,0,0.25);
 }
 
 .ww-optimal {
   border-left-color: #22c55e;
-  background: linear-gradient(to right, #f0fdf4, #ffffff);
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
 .ww-warning {
   border-left-color: #f59e0b;
-  background: linear-gradient(to right, #fffbeb, #ffffff);
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
 .ww-content {
