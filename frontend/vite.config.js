@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'cropped_circle_image.png'],
       manifest: {
         name: 'AgriSense AI - Crop Intelligence',
         short_name: 'AgriSense AI',
@@ -16,24 +16,25 @@ export default defineConfig({
         theme_color: '#14b8a6',
         background_color: '#ffffff',
         display: 'standalone',
+        display_override: ['window-controls-overlay', 'standalone', 'minimal-ui'],
         orientation: 'portrait',
         start_url: '/',
         scope: '/',
+        categories: ['agriculture', 'productivity', 'tools'],
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: 'cropped_circle_image.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'cropped_circle_image.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
           }
         ]
-
       },
       devOptions: {
         enabled: true,
@@ -42,3 +43,4 @@ export default defineConfig({
     })
   ],
 })
+

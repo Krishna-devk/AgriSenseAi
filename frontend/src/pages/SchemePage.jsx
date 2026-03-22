@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
+import Toast from '../components/Toast'
 import './SchemePage.css'
 import WeatherWarningCard from '../components/WeatherWarningCard'
 
@@ -14,13 +15,133 @@ const SchemePage = () => {
   })
   
   const [isLoading, setIsLoading] = useState(false)
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
+  const [toast, setToast] = useState(null)
+
+  useEffect(() => {
+    // Check for profile to autofill
+    const loadProfile = async () => {
+      const email = localStorage.getItem('agrisense_user_email');
+      let profile = null;
+      
+      if (email) {
+        try {
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'}/api/v1/profile/${email}`);
+          if (res.ok) profile = await res.json();
+        } catch (e) { console.warn("Profile fetch failed"); }
+      }
+
+      // Check for global sync data
+      const savedData = localStorage.getItem('agrisense_location_data_v2')
+
+      setForm(prev => ({
+        ...prev,
+        // Fill from profile
+        crop_type: profile?.crop_type || prev.crop_type,
+        land_size_acres: profile?.land_size_acres || prev.land_size_acres,
+        
+        // Fill from sync or profile
+        location: profile?.location || (savedData ? JSON.parse(savedData).region_info : prev.location)
+      }))
+
+      if (profile) showToast(`Welcome back! Your farm profile has been autofilled.`, 'success');
+      else if (!savedData) syncLocation(true);
+    }
+
+    loadProfile();
+  }, [])
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type })
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
     if (error) setError('')
+  }
+
+  const syncLocation = (silent = false) => {
+    // PRIORITY 1: Check farmer's registered profile location
+    const profile = JSON.parse(localStorage.getItem('agrisense_user_profile') || 'null')
+    
+    if (profile && profile.location) {
+      setForm(prev => ({ ...prev, location: profile.location }))
+      if (!silent) showToast(`📍 Using profile location: ${profile.location}`, 'success')
+      return
+    }
+
+    // PRIORITY 2: GPS Fallback
+    if (!navigator.geolocation) {
+      if (!silent) showToast("Geolocation is not supported by your browser", "error")
+      return
+    }
+    
+    setIsSyncing(true)
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'}/api/v1/weather-sync`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lat: latitude, lon: longitude })
+        })
+        const data = await response.json()
+        
+        if (data.status === 'success') {
+          setForm(prev => ({
+            ...prev,
+            location: data.region_info
+          }))
+          if (!silent) showToast(`📍 Location synced to: ${data.region_info}`, 'success')
+        }
+      } catch (err) {
+        console.error("Sync error:", err)
+        if (!silent) showToast("Failed to sync location. Please enter manually.", "error")
+      } finally {
+        setIsSyncing(false)
+      }
+    }, () => {
+      if (!silent) showToast("Please allow location access to use Smart Sync", "error")
+      setIsSyncing(false)
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 })
+  }
+
+  const toggleSpeech = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      showToast("Speech recognition is not supported in this browser.", "error")
+      return
+    }
+
+    if (isRecording) {
+      setIsRecording(false)
+      return
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-IN'; // Optimized for Indian accent/English
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onend = () => setIsRecording(false);
+    recognition.onerror = () => setIsRecording(false);
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setForm(prev => ({
+        ...prev,
+        disease_or_yield_status: prev.disease_or_yield_status 
+          ? prev.disease_or_yield_status + " " + transcript 
+          : transcript
+      }));
+    };
+
+    recognition.start();
   }
 
   const handleSubmit = async (e) => {
@@ -44,6 +165,15 @@ const SchemePage = () => {
         top_k: form.top_k
       }
 
+      // CHECK CACHE FIRST
+      const cacheKey = `agrisense_session_schemes_${JSON.stringify(payload)}`
+      const cachedData = sessionStorage.getItem(cacheKey)
+      if (cachedData) {
+        setResult(JSON.parse(cachedData))
+        setIsLoading(false)
+        return
+      }
+
       // Try hitting absolute API, if fail, fallback to mock
       let data = null;
       try {
@@ -54,6 +184,7 @@ const SchemePage = () => {
         });
         if (!res.ok) throw new Error('API Request Failed')
         data = await res.json()
+        sessionStorage.setItem(cacheKey, JSON.stringify(data))
       } catch (err) {
         // Fallback mock if backend not working (for demonstration purposes based on provided response)
         console.warn("Backend not reachable, using mock data", err)
@@ -129,7 +260,17 @@ const SchemePage = () => {
                     <input type="text" name="crop_type" className="form-input" placeholder="e.g. Rice, Wheat, Cotton" value={form.crop_type} onChange={handleChange} />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Location (State, Region) *</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label className="form-label">Location (State, Region) *</label>
+                      <button 
+                        type="button" 
+                        onClick={syncLocation} 
+                        disabled={isSyncing}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary-600)', fontSize: '0.75rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        {isSyncing ? '⌛ Syncing...' : '📍 Sync GPS'}
+                      </button>
+                    </div>
                     <input type="text" name="location" className="form-input" placeholder="e.g. Punjab, India" value={form.location} onChange={handleChange} />
                   </div>
                 </div>
@@ -145,8 +286,30 @@ const SchemePage = () => {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Disease or Yield Status (Optional)</label>
+                <div className="form-group" style={{ position: 'relative' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label className="form-label">Disease or Yield Status (Optional)</label>
+                    <button 
+                      type="button" 
+                      onClick={toggleSpeech}
+                      className={isRecording ? 'voice-btn recording' : 'voice-btn'}
+                      style={{ 
+                        background: isRecording ? '#fee2e2' : 'none', 
+                        border: 'none', 
+                        color: isRecording ? '#ef4444' : 'var(--primary-600)', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '700', 
+                        cursor: 'pointer', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '4px',
+                        padding: '2px 8px',
+                        borderRadius: '12px'
+                      }}
+                    >
+                      {isRecording ? '🛑 Stop Recording...' : '🎙️ Speak instead of typing'}
+                    </button>
+                  </div>
                   <textarea 
                     name="disease_or_yield_status" 
                     className="form-input form-textarea" 
@@ -292,6 +455,13 @@ const SchemePage = () => {
           </div>
         )}
       </div>
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   )
 }

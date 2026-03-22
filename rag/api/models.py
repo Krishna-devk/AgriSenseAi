@@ -98,3 +98,44 @@ class CropYieldResponse(BaseModel):
     status: str
     predicted_yield_tonnes_per_ha: float = Field(..., description="Estimated yield in tonnes per hectare.")
     inputs_received: Optional[Dict[str, Any]] = None
+
+
+class WeatherSyncRequest(BaseModel):
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    city: Optional[str] = None
+
+
+class WeatherSyncResponse(BaseModel):
+    status: str
+    temperature: float
+    humidity: float
+    rainfall: float
+    region_info: str
+    message: Optional[str] = None
+
+
+class MarketSyncRequest(BaseModel):
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    city: Optional[str] = None
+    crop: Optional[str] = None
+
+
+class MarketPriceRecord(BaseModel):
+    state: str
+    district: str
+    market: str
+    commodity: str
+    variety: str
+    arrival_date: str
+    min_price: float
+    max_price: float
+    modal_price: float
+
+
+class MarketSyncResponse(BaseModel):
+    status: str
+    region: str
+    markets: List[MarketPriceRecord]
+    message: Optional[str] = None

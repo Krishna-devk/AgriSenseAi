@@ -1,11 +1,17 @@
-from fastapi import APIRouter, HTTPException, File, UploadFile
 from api.models import (
     MatchRequest, MatchResponse, ChatRequest, ChatResponse,
     TreatmentPlanRequest, TreatmentPlanResponse, VisionAnalysisResponse,
-    CropYieldRequest, CropYieldResponse
+    CropYieldRequest, CropYieldResponse, WeatherSyncRequest, WeatherSyncResponse,
+    MarketSyncRequest, MarketSyncResponse
 )
+from api.database import get_db
+from api.db_models import FarmerProfile
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException, File, UploadFile, Depends
 from rag.retriever import match_schemes, ask_ai_question, generate_treatment_plan, analyze_crop_image
 from rag.yield_predictor import predict_crop_yield
+from rag.weather_service import get_weather_data
+from rag.market_service import get_market_prices
 from rag.embedder import initialise
 
 router = APIRouter()
@@ -131,6 +137,91 @@ async def list_all_schemes():
     }
 
 
+@router.post("/weather-sync", response_model=WeatherSyncResponse, summary="Sync weather data based on coordinates or city")
+async def sync_weather(request: WeatherSyncRequest):
+    """
+    Fetch climatic parameters (Rainfall, Temp, Humidity).
+    Prioritizes city if provided, otherwise uses lat/lon.
+    """
+    try:
+        from rag.weather_service import get_coords_from_city
+        lat, lon = request.lat, request.lon
+        
+        if request.city:
+            coords = get_coords_from_city(request.city)
+            lat, lon = coords['lat'], coords['lon']
+            
+        if lat is None or lon is None:
+            raise HTTPException(status_code=400, detail="Either city or coordinates must be provided.")
+            
+        result = get_weather_data(lat, lon, request.city)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/market-sync", response_model=MarketSyncResponse, summary="Sync market prices based on coordinates or city")
+async def sync_markets(request: MarketSyncRequest):
+    """
+    Fetch nearest mandi prices.
+    Prioritizes city if provided, otherwise uses lat/lon.
+    """
+    try:
+        from rag.weather_service import get_coords_from_city
+        lat, lon = request.lat, request.lon
+        
+        if request.city:
+            coords = get_coords_from_city(request.city)
+            lat, lon = coords['lat'], coords['lon']
+            
+        if lat is None or lon is None:
+            raise HTTPException(status_code=400, detail="Either city or coordinates must be provided.")
+
+        result = get_market_prices(lat, lon, request.crop)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/health", summary="Health check")
 async def health():
     return {"status": "ok"}
+
+
+# --- Profile Management Endpoints ---
+
+@router.get("/profile/{email}", summary="Get farmer profile by email")
+async def get_farmer_profile(email: str, db: Session = Depends(get_db)):
+    """Retrieve a farmer's profile data from MySQL."""
+    profile = db.query(FarmerProfile).filter(FarmerProfile.email == email).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile.to_dict()
+
+
+@router.post("/profile", summary="Create or update farmer profile")
+async def save_farmer_profile(profile_data: dict, db: Session = Depends(get_db)):
+    """Save or update a farmer's profile data in MySQL."""
+    email = profile_data.get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+
+    db_profile = db.query(FarmerProfile).filter(FarmerProfile.email == email).first()
+
+    if db_profile:
+        # Update existing
+        for key, value in profile_data.items():
+            if hasattr(db_profile, key):
+                setattr(db_profile, key, value)
+    else:
+        # Create new
+        db_profile = FarmerProfile(**profile_data)
+        db.add(db_profile)
+
+    try:
+        db.commit()
+        db.refresh(db_profile)
+        return {"status": "success", "profile": db_profile.to_dict()}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")

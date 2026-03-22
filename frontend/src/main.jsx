@@ -1,25 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import './index.css'
 import App from './App.jsx'
 import './lib/voice-widget.js'
-import { registerSW } from 'virtual:pwa-register'
 
-// Auto-register service worker for PWA
-const updateSW = registerSW({
-  onNeedRefresh() {
-    if (confirm('New content available. Reload?')) {
-      updateSW(true)
-    }
-  },
-  onOfflineReady() {
-    console.log('App ready for offline use')
-  },
-})
-
+const GOOGLE_CLIENT_ID = "454171758695-egdkej8hevlqeturivkmfll2oj56ff0i.apps.googleusercontent.com"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <App />
+    </GoogleOAuthProvider>
   </StrictMode>,
 )

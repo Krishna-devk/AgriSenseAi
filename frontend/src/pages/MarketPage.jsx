@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import './MarketPage.css'
 
@@ -8,24 +8,34 @@ const MarketPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
+  const [syncStatus, setSyncStatus] = useState('')
 
-  const fetchMarketPrices = async (e) => {
-    e.preventDefault()
-    if (!commodity.trim()) return
+  const performSearch = async (cropName) => {
+    if (!cropName.trim()) return
+
+    const formattedCommodity = cropName.trim()[0].toUpperCase() + cropName.trim().slice(1).toLowerCase()
+    
+    // CHECK CACHE FIRST
+    const cacheKey = `agrisense_session_market_${formattedCommodity}`
+    const cachedData = sessionStorage.getItem(cacheKey)
+    
+    if (cachedData) {
+      setRecords(JSON.parse(cachedData))
+      setHasSearched(true)
+      return
+    }
 
     setLoading(true)
     setError('')
     setHasSearched(true)
     setRecords([])
+    setSyncStatus('🛰️ Loading market prices...')
 
     try {
       const apiKey = import.meta.env.VITE_MARKET_API_KEY
       if (!apiKey) {
         throw new Error('API Key is missing. Please add VITE_MARKET_API_KEY in .env.')
       }
-
-      // Format crop name (first letter capitalized for APMC dataset matching)
-      const formattedCommodity = commodity.trim()[0].toUpperCase() + commodity.trim().slice(1).toLowerCase()
       
       const res = await fetch(`https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=${apiKey}&format=json&limit=100&filters[commodity]=${encodeURIComponent(formattedCommodity)}`)
       
@@ -38,15 +48,40 @@ const MarketPage = () => {
       if (data.status === 'error' || data.error) {
         setError(data.message || 'Could not fetch market data.')
       } else {
-        setRecords(data.records || [])
+        const fetched = data.records || []
+        setRecords(fetched)
+        // SAVE TO CACHE
+        sessionStorage.setItem(cacheKey, JSON.stringify(fetched))
       }
     } catch (err) {
       console.error(err)
       setError('Failed to connect to the Government Market service. Make sure your API key is correct.')
     } finally {
       setLoading(false)
+      setSyncStatus('')
     }
   }
+
+  useEffect(() => {
+    const autoFillAndSearch = async () => {
+      const profile = JSON.parse(localStorage.getItem('agrisense_user_profile') || 'null')
+      const lastCrop = profile?.crop_type || localStorage.getItem('agrisense_last_crop')
+
+      if (!lastCrop) return 
+
+      const cropName = lastCrop.trim()[0].toUpperCase() + lastCrop.trim().slice(1).toLowerCase()
+      setCommodity(cropName)
+      await performSearch(cropName)
+    }
+
+    autoFillAndSearch()
+  }, [])
+
+  const fetchMarketPrices = async (e) => {
+    e.preventDefault()
+    await performSearch(commodity)
+  }
+
 
   // ---- Analytics Logic ----
   const validRecords = records.filter(r => r.modal_price && !isNaN(parseFloat(r.modal_price)))
@@ -138,9 +173,12 @@ const MarketPage = () => {
 
         {hasSearched && !loading && !error && records.length === 0 && (
           <div className="market-placeholder animate-fadeInUp">
-            <div className="placeholder-icon">📉</div>
-            <h3>No Records Found</h3>
-            <p>We couldn't find any recent mandi quotes for "{commodity}". Try another crop.</p>
+            <div className="placeholder-icon">📭</div>
+            <h3>No Mandi Quotes Found</h3>
+            <p>No recent records for <strong>"{commodity}"</strong> in the government APMC dataset.</p>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '8px' }}>
+              💡 Try alternate spellings — e.g. <em>"Paddy"</em> instead of "Rice", <em>"Arhar"</em> instead of "Tur", <em>"Gram"</em> instead of "Chickpea".
+            </p>
           </div>
         )}
 

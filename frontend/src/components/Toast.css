@@ -1,0 +1,75 @@
+.agri-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  background: white;
+  border-radius: 16px;
+  padding: 16px 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.agri-toast--success {
+  border-left: 6px solid #22c55e;
+}
+
+.agri-toast--error {
+  border-left: 6px solid #ef4444;
+}
+
+.agri-toast--info {
+  border-left: 6px solid #3b82f6;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.toast-icon {
+  font-size: 1.25rem;
+}
+
+.toast-message {
+  color: #1a202c;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #a0aec0;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.toast-close:hover {
+  color: #4a5568;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.4s ease forwards;
+}

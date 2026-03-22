@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Globe from 'react-globe.gl'
+import Toast from '../components/Toast'
 import './WeatherPage.css'
 
 
@@ -9,11 +10,64 @@ const WeatherPage = () => {
   const [weather, setWeather] = useState(null)
   const [forecast, setForecast] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
   const [error, setError] = useState('')
+  const [toast, setToast] = useState(null)
 
-  const fetchWeather = async (e) => {
-    e.preventDefault()
-    if (!city.trim()) return
+  useEffect(() => {
+    // PRIORITY 1: Check farmer's registered profile location
+    const profile = JSON.parse(localStorage.getItem('agrisense_user_profile') || 'null')
+    
+    if (profile && profile.location && !weather) {
+      // Extract city name from "Pune, Maharashtra" → "Pune"
+      const profileCity = profile.location.split(',')[0].trim()
+      setCity(profileCity)
+      return // Don't run GPS or other fallbacks
+    }
+
+    // PRIORITY 2: Check localStorage sync data
+    const savedCity = localStorage.getItem('agrisense_weather_city')
+    const locationData = localStorage.getItem('agrisense_location_data')
+
+    if (savedCity && !weather) {
+      setCity(savedCity)
+    } else if (locationData && !weather) {
+      const data = JSON.parse(locationData)
+      const cityName = data.region_info.split(',')[0].trim()
+      setCity(cityName)
+    } else {
+      // PRIORITY 3: GPS fallback
+      syncLocation(true)
+    }
+  }, [])
+
+  // Abstracted search function for reuse
+  const fetchWeatherByCity = async (cityName) => {
+    if (!cityName) return
+    setCity(cityName)
+    await fetchWeather(null, cityName)
+  }
+
+  const showToast = (msg, type = 'success') => {
+    setToast({ message: msg, type })
+  }
+
+  const fetchWeather = async (e, directCity) => {
+    if (e) e.preventDefault()
+    const targetCity = directCity || city
+    if (!targetCity.trim()) return
+
+    // CHECK CACHE FIRST
+    const cacheKey = `agrisense_session_weather_${targetCity.trim().toLowerCase()}`
+    const cachedData = sessionStorage.getItem(cacheKey)
+    if (cachedData) {
+      const parsed = JSON.parse(cachedData)
+      setWeather(parsed.weather)
+      setForecast(parsed.forecast)
+      setCity(parsed.weather.city)
+      return
+    }
 
     setLoading(true)
     setError('')
@@ -26,7 +80,7 @@ const WeatherPage = () => {
         throw new Error("Missing Weather API Key. Add VITE_WEATHER_API_KEY to your .env file.")
       }
 
-      const encodedCity = encodeURIComponent(city.trim())
+      const encodedCity = encodeURIComponent(targetCity.trim())
       const [resWeather, resForecast] = await Promise.all([
         fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&appid=${apiKey}&units=metric`),
         fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodedCity}&appid=${apiKey}&units=metric`)
@@ -34,7 +88,7 @@ const WeatherPage = () => {
 
       if (!resWeather.ok) {
         const errorData = await resWeather.json()
-        throw new Error(errorData.message || 'Could not fetch weather data from OpenWeatherMap.')
+        throw new Error(errorData.message || 'Could not fetch weather data.')
       }
 
       const dataWeather = await resWeather.json()
@@ -52,15 +106,13 @@ const WeatherPage = () => {
       setWeather(mappedWeather)
       localStorage.setItem('agrisense_weather_city', mappedWeather.city)
 
+      let mappedForecast = []
       if (resForecast.ok) {
         const dataForecast = await resForecast.json()
-        
-        // Group 3-hour chunks into a daily forecast for UI representation
         const dailyData = {}
         dataForecast.list.forEach(item => {
           const date = item.dt_txt.split(' ')[0]
           if (!dailyData[date]) {
-            // Find day name
             let dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'short' })
             dailyData[date] = { temps: [], icons: [], day_name: dayName }
           }
@@ -68,7 +120,7 @@ const WeatherPage = () => {
           dailyData[date].icons.push(item.weather[0].icon)
         })
 
-        const mappedForecast = Object.keys(dailyData).slice(0, 5).map(date => {
+        mappedForecast = Object.keys(dailyData).slice(0, 5).map(date => {
           const d = dailyData[date]
           return {
             day_name: d.day_name,
@@ -77,9 +129,16 @@ const WeatherPage = () => {
             min_temp: Math.min(...d.temps)
           }
         })
-
         setForecast(mappedForecast)
       }
+
+      // SAVE TO CACHE
+      sessionStorage.setItem(cacheKey, JSON.stringify({
+        weather: mappedWeather,
+        forecast: mappedForecast
+      }))
+
+
     } catch (err) {
       console.error(err)
       setError(err.message || 'Failed to connect to the weather service.')
@@ -88,16 +147,86 @@ const WeatherPage = () => {
     }
   }
 
+  const syncLocation = (silent = false) => {
+    if (!navigator.geolocation) {
+      if (!silent) showToast("Geolocation not supported", "error")
+      return
+    }
+    
+    setIsSyncing(true)
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords
+        // Use our precise backend geocoding
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'}/api/v1/weather-sync`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lat: latitude, lon: longitude })
+        })
+        const data = await response.json()
+        
+        if (data.status === 'success') {
+          if (data.region_info.includes(',')) {
+            data.region_info = data.region_info.split(',')[0].trim();
+          }
+          // Extract city name for OWM search or just use the data
+          const cityName = data.region_info
+          setCity(cityName)
+          // We can't automatically fetch OWM without key, but we can show our backend data as a preview
+          setWeather({
+            city: data.region_info,
+            description: "Synced via GPS",
+            temp: data.temperature,
+            feels_like: data.temperature,
+            humidity: data.humidity,
+            wind_speed: "Syncing..."
+          })
+          if (!silent) showToast(`📍 Field located in ${data.region_info}`, 'success')
+        }
+      } catch (err) {
+        console.error("Sync error:", err)
+        showToast("GPS detection failed. Please search manually.", "error")
+      } finally {
+        setIsSyncing(false)
+      }
+    }, () => {
+      showToast("Location access denied.", "error")
+      setIsSyncing(false)
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 })
+  }
+
+  const toggleSpeech = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      showToast("Voice not supported by browser.", "error")
+      return
+    }
+    if (isRecording) { setIsRecording(false); return }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-IN';
+    recognition.onstart = () => {
+      setIsRecording(true);
+      showToast("🎙️ Listening...", "info")
+    }
+    recognition.onend = () => setIsRecording(false);
+    recognition.onerror = () => {
+      setIsRecording(false);
+      showToast("🎙️ Failed to hear clearly.", "error")
+    }
+    recognition.onresult = (event) => setCity(event.results[0][0].transcript);
+    recognition.start();
+  }
+
   const getWeatherBg = (icon) => {
-    if (!icon) return 'linear-gradient(135deg, #74ebd5, #9face6)'
-    if (icon.startsWith('01')) return 'linear-gradient(135deg, #f6d365, #fda085)' // clear
+    if (!icon) return 'linear-gradient(135deg, #0ea5e9, #6366f1)'
+    if (icon.startsWith('01')) return 'linear-gradient(135deg, #f59e0b, #ef4444)' // clear
     if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return 'linear-gradient(135deg, #c9d6ff, #e2e2e2)' // clouds
+      return 'linear-gradient(135deg, #64748b, #334155)' // clouds
     if (icon.startsWith('09') || icon.startsWith('10'))
-      return 'linear-gradient(135deg, #4e54c8, #8f94fb)' // rain
-    if (icon.startsWith('11')) return 'linear-gradient(135deg, #373b44, #4286f4)' // thunder
-    if (icon.startsWith('13')) return 'linear-gradient(135deg, #e0eafc, #cfdef3)' // snow
-    return 'linear-gradient(135deg, #74ebd5, #9face6)'
+      return 'linear-gradient(135deg, #3b82f6, #1d4ed8)' // rain
+    if (icon.startsWith('11')) return 'linear-gradient(135deg, #4c1d95, #2e1065)' // thunder
+    if (icon.startsWith('13')) return 'linear-gradient(135deg, #bae6fd, #7dd3fc)' // snow
+    return 'linear-gradient(135deg, #0ea5e9, #6366f1)'
   }
 
   return (
@@ -121,6 +250,7 @@ const WeatherPage = () => {
           </p>
 
           {/* Search */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <form className="weather-search" onSubmit={fetchWeather} id="weather-search-form">
             <input
               type="text"
@@ -130,6 +260,15 @@ const WeatherPage = () => {
               onChange={(e) => setCity(e.target.value)}
               id="weather-city-input"
             />
+            <button 
+              type="button" 
+              className={`btn-voice-search ${isRecording ? 'recording' : ''}`}
+              onClick={toggleSpeech}
+              title="Voice Search"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '0 10px' }}
+            >
+              {isRecording ? '🛑' : '🎙️'}
+            </button>
             <button type="submit" className="btn btn-primary" id="weather-search-btn" disabled={loading}>
               {loading ? (
                 <span className="weather-spinner" />
@@ -138,6 +277,26 @@ const WeatherPage = () => {
               )}
             </button>
           </form>
+          <button 
+                type="button" 
+                className="btn-sync-weather" 
+                onClick={syncLocation}
+                disabled={isSyncing}
+                style={{ 
+                  background: 'rgba(255,255,255,0.15)', 
+                  border: '1px solid rgba(255,255,255,0.3)', 
+                  color: 'white', 
+                  padding: '8px 16px', 
+                  borderRadius: '20px', 
+                  fontSize: '0.85rem', 
+                  fontWeight: '600',
+                  alignSelf: 'center',
+                  cursor: 'pointer'
+                }}
+              >
+                {isSyncing ? '⌛ Detecting...' : '📍 Auto-Detect My Field Location'}
+          </button>
+          </div>
         </div>
       </div>
 
@@ -280,6 +439,13 @@ const WeatherPage = () => {
           </div>
         )}
       </div>
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   )
 }

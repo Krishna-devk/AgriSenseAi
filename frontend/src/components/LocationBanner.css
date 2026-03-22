@@ -1,0 +1,73 @@
+.location-banner {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 600px;
+    background: rgba(13, 148, 136, 0.95);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+.location-banner__content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.location-banner__icon {
+    font-size: 1.25rem;
+}
+
+.location-banner__text {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.location-banner__close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.location-banner__close:hover {
+    color: white;
+}
+
+.location-banner__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.4);
+    width: 0%;
+    animation: bannerProgress 8s linear forwards;
+}
+
+@keyframes bannerProgress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+@keyframes slideIn {
+    from { transform: translate(-50%, -40px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.animate-slideIn {
+    animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
