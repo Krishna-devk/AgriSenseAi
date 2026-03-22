@@ -340,11 +340,11 @@ const YieldPage = () => {
                     </div>
                     <div className="sync-banner-premium__stats">
                       <div className="sync-stat">
-                        <span className="stat-label">Temp:</span>
+                        <span className="stat-label">Now:</span>
                         <span className="stat-val">{JSON.parse(localStorage.getItem('agrisense_location_data_v2')).temperature}°C</span>
                       </div>
                       <div className="sync-stat">
-                        <span className="stat-label">Rain:</span>
+                        <span className="stat-label">Annual Rain:</span>
                         <span className="stat-val">{JSON.parse(localStorage.getItem('agrisense_location_data_v2')).rainfall}mm</span>
                       </div>
                     </div>

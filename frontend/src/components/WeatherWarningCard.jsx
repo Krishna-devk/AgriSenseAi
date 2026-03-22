@@ -32,22 +32,25 @@ const WeatherWarningCard = ({ city }) => {
       rawData.list.forEach(item => {
         const date = item.dt_txt.split(' ')[0]
         if (!dailyData[date]) {
-          dailyData[date] = { temps: [], humidities: [], winds: [], icons: [] }
+          dailyData[date] = { temps: [], humidities: [], winds: [], icons: [], pops: [] }
         }
         dailyData[date].temps.push(item.main.temp_max, item.main.temp_min)
         dailyData[date].humidities.push(item.main.humidity)
-        dailyData[date].winds.push(item.wind.speed) // m/s
+        dailyData[date].winds.push(item.wind.speed) 
         dailyData[date].icons.push(item.weather[0].icon)
+        dailyData[date].pops.push(item.pop || 0) // Probability of Precip
       })
 
       const days = Object.keys(dailyData).slice(0, 5).map(date => {
         const d = dailyData[date]
         return {
-          icon: d.icons[Math.floor(d.icons.length / 2)], // take mid-day icon
+          date: date,
+          icon: d.icons[Math.floor(d.icons.length / 2)],
           max_temp: Math.max(...d.temps),
           min_temp: Math.min(...d.temps),
           max_humidity: Math.max(...d.humidities),
-          max_wind: Math.max(...d.winds)
+          max_wind: Math.max(...d.winds),
+          max_pop: Math.max(...d.pops)
         }
       })
 
@@ -64,27 +67,32 @@ const WeatherWarningCard = ({ city }) => {
   const getCropWarnings = (days) => {
     const alerts = new Set()
 
-    days.forEach(day => {
-      // 1. Heavy Rain Check
+    days.forEach((day, index) => {
+      const dateObj = new Date(day.date)
+      const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      const dayLabel = index === 0 ? "Today" : formattedDate
+
+      // 1. Heavy Rain Check - Only if icon is Rain/Storm AND probability > 40%
       if (day.icon && (day.icon.startsWith('09') || day.icon.startsWith('10') || day.icon.startsWith('11'))) {
-        alerts.add("Heavy rainfall or thunderstorms expected. Avoid irrigation and ensure proper field drainage.")
+        if (day.max_pop > 0.4) {
+          alerts.add(`Forecast for ${dayLabel}: Critical risk of heavy rainfall/thunderstorms (${Math.round(day.max_pop * 100)}% prob). Ensure drainage is clear.`)
+        }
       }
       // 2. Extreme Heat Check
       if (day.max_temp >= 38) {
-        alerts.add("Extreme heat wave forecasted. Increase soil moisture and monitor for heat stress.")
+        alerts.add(`Forecast for ${dayLabel}: Extreme heat stress warning (Peak ${Math.round(day.max_temp)}°C). Increase irrigation frequency.`)
       }
       // 3. Frost Warning
       if (day.min_temp <= 5) {
-        alerts.add("Frost conditions detected. Protect sensitive crops and apply light irrigation.")
+        alerts.add(`Forecast for ${dayLabel}: Possible frost event (Low ${Math.round(day.min_temp)}°C). Protect sensitive seedlings.`)
       }
       // 4. Fungal Pathogen Risk
       if (day.max_humidity > 85 && day.max_temp > 25) {
-        alerts.add("High humidity and warm temperatures ahead. Highly favorable for fungal diseases. Keep a close watch.")
+        alerts.add(`Forecast for ${dayLabel}: High fungal risk detected (Humidity >85%). Maintain proper ventilation.`)
       }
-      // 5. High Winds Alert (m/s to km/h rough conversion: x 3.6)
-      // OWM Metric returns m/s, so threshold is ~7 m/s (25 km/h)
-      if (day.max_wind > 7) {
-        alerts.add("Strong winds forecasted (>25 km/h equivalents). Secure loose structures and delay spraying pesticides.")
+      // 5. High Winds Alert
+      if (day.max_wind > 10) { // Threshold 10 m/s (~36 km/h) for stronger warning
+        alerts.add(`Forecast for ${dayLabel}: Strong winds expected (${Math.round(day.max_wind * 3.6)} km/h). Secure equipment.`)
       }
     })
 
